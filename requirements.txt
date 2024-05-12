@@ -1,1 +1,3 @@
 pytesseract
+rich
+opencv-python
