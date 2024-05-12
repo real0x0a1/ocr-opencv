@@ -1,6 +1,5 @@
 import cv2
 import pytesseract
-
 from pytesseract import Output
 from rich.progress import Progress
 from rich.prompt import Prompt
@@ -29,7 +28,12 @@ def save_output_text(text, output_file_name):
     # Save the output to a text file
     with open(output_file_name + '.txt', 'w') as f:
         f.write(text)
-    print("Output saved to", output_file_name + '.txt')
+    print("Output text saved to", output_file_name + '.txt')
+
+def save_output_image(image, output_image_path):
+    # Save the output image
+    cv2.imwrite(output_image_path, image)
+    print("Output image saved to", output_image_path)
 
 def display_image_with_text(image, d):
     for i in range(len(d['text'])):
@@ -46,7 +50,7 @@ def main():
     image_path = Prompt.ask("[bold cyan]Enter the path to the image file: [/]")
 
     # Ask for the file extension
-    file_extension = Prompt.ask("[bold cyan]Enter the file extension (e.g., png, jpg, etc.): [/]", default="png")
+    file_extension = Prompt.ask("[bold cyan]Enter the file extension (e.g., png, jpg, etc.): [/]")
 
     # Path to the image
     full_image_path = f"{image_path}.{file_extension}"
@@ -65,6 +69,12 @@ def main():
     show_image = Prompt.ask("[cyan]Do you want to display the output image? (y/n): [/]", choices=["y", "n"], default="n").lower()
     if show_image == 'y':
         display_image_with_text(img, d)
+
+    # Ask whether to save the output image
+    save_image = Prompt.ask("[cyan]Do you want to save the output image? (y/n): [/]", choices=["y", "n"], default="n").lower()
+    if save_image == 'y':
+        output_image_path = input("Enter the path to save the output image: ")
+        save_output_image(img, output_image_path)
 
     # Ask for output file name
     output_file_name = input("Enter a name for the output file (without extension): ")
