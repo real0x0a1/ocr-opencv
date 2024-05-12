@@ -66,12 +66,12 @@ def main():
     print("[center]" + recognized_text.strip() + "[/center]")
 
     # Ask whether to display the output image
-    show_image = Prompt.ask("[cyan]Do you want to display the output image? (y/n): [/]", choices=["y", "n"], default="n").lower()
+    show_image = Prompt.ask("[cyan]Do you want to display the output image?[/]", choices=["y", "n"], default="n").lower()
     if show_image == 'y':
         display_image_with_text(img, d)
 
     # Ask whether to save the output image
-    save_image = Prompt.ask("[cyan]Do you want to save the output image? (y/n): [/]", choices=["y", "n"], default="n").lower()
+    save_image = Prompt.ask("[cyan]Do you want to save the output image?[/]", choices=["y", "n"], default="n").lower()
     if save_image == 'y':
         output_image_path = input("Enter the path to save the output image: ")
         save_output_image(img, output_image_path)
