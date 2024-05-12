@@ -1,5 +1,7 @@
 #!/bin/python3
 
+# -*- Author: real0x0a1 (Ali) -*-
+
 # import libraries
 import cv2
 import pytesseract
