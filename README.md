@@ -47,7 +47,7 @@ python main.py
 
 ### Output
 
-![Output image](images/output_imgae.png)
+![Output image](images/output_image.png)
 
 ## Acknowledgements
 
