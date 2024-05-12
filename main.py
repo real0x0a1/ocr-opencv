@@ -1,3 +1,6 @@
+#!/bin/python3
+
+# import libraries
 import cv2
 import pytesseract
 
