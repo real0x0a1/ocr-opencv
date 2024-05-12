@@ -63,3 +63,7 @@ Contributions are welcome! Fork the repository and submit a pull request.
 Please open an issue on the GitHub repository for any bugs or feature requests.
 
 ## Author
+
+real0x0a1 (Ali)
+
+---
