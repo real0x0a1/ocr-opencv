@@ -61,3 +61,5 @@ Contributions are welcome! Fork the repository and submit a pull request.
 ## Issues
 
 Please open an issue on the GitHub repository for any bugs or feature requests.
+
+## Author
