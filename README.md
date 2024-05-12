@@ -12,7 +12,8 @@ This project provides a Python script to perform OCR on images using the Tessera
 - **Text Extraction**: Extracts text from images using Tesseract OCR engine.
 - **Output Formatting**: Displays the recognized text and optionally the processed image with bounding boxes around recognized text.
 - **Output Saving**: Saves the extracted text to a text file for further analysis or use.
-
+- **TODO**: Implement live camera OCR option.
+  
 ## Usage
 
 ### Installation
