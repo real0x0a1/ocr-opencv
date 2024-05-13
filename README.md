@@ -15,7 +15,7 @@ This project provides a Python script to perform OCR on images using the Tessera
 
 ## TODO: Implement Live Camera OCR Option
 
-- [ ] **Live Camera OCR:** Implement functionality to enable real-time OCR.
+- [] **Live Camera OCR:** Implement functionality to enable real-time OCR.
 
   
 ## Usage
