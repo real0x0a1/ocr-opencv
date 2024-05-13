@@ -34,7 +34,7 @@ def perform_ocr(image_path):
         x, y, w, h = d['left'][i], d['top'][i], d['width'][i], d['height'][i]
         text = d['text'][i]
         cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
-        cv2.putText(img, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 2)
+        cv2.putText(img, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
     return recognized_text, img
 
@@ -50,43 +50,86 @@ def save_output_image(image, output_image_path):
     print(f"[green]Output image saved to {output_image_path}[/]")
 
 def main():
-    # Ask for the image path
-    image_path = Prompt.ask("[bold cyan]Enter the path to the image file: [/]")
+    # Ask for OCR option
+    ocr_option = Prompt.ask("[bold cyan]Choose OCR option (1 for image, 2 for live camera): [/]", choices=["1", "2"], default="1")
 
-    # Ask for the file extension
-    file_extension = Prompt.ask("[bold cyan]Enter the file extension (e.g., png, jpg, etc.): [/]", default="png")
+    if ocr_option == '1':
+        # Ask for the image path
+        image_path = Prompt.ask("[bold cyan]Enter the path to the image file: [/]")
 
-    # Path to the image
-    full_image_path = f"{image_path}.{file_extension}"
+        # Ask for the file extension
+        file_extension = Prompt.ask("[bold cyan]Enter the file extension (e.g., png, jpg, etc.): [/]", default="png")
 
-    # Show loading progress
-    with Progress() as progress:
-        task = progress.add_task("[cyan]Performing OCR...", total=1)
-        recognized_text, img = perform_ocr(full_image_path)
-        progress.update(task, advance=1)
+        # Path to the image
+        full_image_path = f"{image_path}.{file_extension}"
 
-    # Display the recognized text
-    print("[bold cyan]OCR Output:[/]\n")
-    print("[center]" + recognized_text.strip() + "[/center]")
+        # Show loading progress
+        with Progress() as progress:
+            task = progress.add_task("[cyan]Performing OCR...", total=1)
+            recognized_text, img = perform_ocr(full_image_path)
+            progress.update(task, advance=1)
 
-    # Ask whether to display the output image
-    show_image = Prompt.ask("[cyan]Do you want to display the output image?[/]", choices=["y", "n"], default="n").lower()
-    if show_image == 'y':
-        cv2.imshow('Output', img)
-        cv2.waitKey(0)
+        # Display the recognized text
+        print("[bold cyan]OCR Output:[/]\n")
+        print("[center]" + recognized_text.strip() + "[/center]")
+
+        # Ask whether to display the output image
+        show_image = Prompt.ask("[cyan]Do you want to display the output image?[/]", choices=["y", "n"], default="n").lower()
+        if show_image == 'y':
+            cv2.imshow('Output', img)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+
+        # Ask whether to save the output image
+        save_image = Prompt.ask("[cyan]Do you want to save the output image?[/]", choices=["y", "n"], default="n").lower()
+        if save_image == 'y':
+            output_image_path = Prompt.ask("[cyan]Enter the path to save the output image:[/]", default="output.png")
+            save_output_image(img, output_image_path)
+
+        # Ask for output file name
+        output_file_name = Prompt.ask("[cyan]Enter a name for the output file (without extension): [/]", default="output")
+
+        # Save the output text to a file
+        save_output_text(recognized_text, output_file_name)
+
+    elif ocr_option == '2':
+        # Initialize video capture
+        cap = cv2.VideoCapture(0)
+
+        # Loop for live OCR feed
+        while True:
+            # Capture frame-by-frame
+            ret, frame = cap.read()
+
+            # Convert frame to grayscale
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            # Perform OCR using Tesseract
+            custom_config = r'-l eng --oem 3 --psm 6'
+            d = pytesseract.image_to_data(gray, output_type=Output.DICT, config=custom_config)
+
+            # Extract the text and its corresponding bounding box
+            recognized_text = ''
+            for i in range(len(d['text'])):
+                recognized_text += d['text'][i] + ' '
+
+            # Draw bounding boxes around detected words with text
+            for i in range(len(d['text'])):
+                x, y, w, h = d['left'][i], d['top'][i], d['width'][i], d['height'][i]
+                text = d['text'][i]
+                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+                cv2.putText(frame, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+
+            # Display the resulting frame
+            cv2.imshow('Live OCR Feed', frame)
+
+            # Break the loop if 'q' is pressed
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        # Release the capture
+        cap.release()
         cv2.destroyAllWindows()
-
-    # Ask whether to save the output image
-    save_image = Prompt.ask("[cyan]Do you want to save the output image?[/]", choices=["y", "n"], default="n").lower()
-    if save_image == 'y':
-        output_image_path = Prompt.ask("[cyan]Enter the path to save the output image:[/]", default="output.png")
-        save_output_image(img, output_image_path)
-
-    # Ask for output file name
-    output_file_name = Prompt.ask("[cyan]Enter a name for the output file (without extension): [/]", default="output")
-
-    # Save the output text to a file
-    save_output_text(recognized_text, output_file_name)
 
 if __name__ == "__main__":
     main()
