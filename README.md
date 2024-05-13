@@ -13,7 +13,7 @@ This project provides a Python script to perform OCR on images using the Tessera
 - **Output Formatting**: Displays the recognized text and optionally the processed image with bounding boxes around recognized text.
 - **Output Saving**: Saves the extracted text to a text file for further analysis or use.
 
-## TODO: Implement Live Camera OCR Option
+## TODO:
 
 - [x] **Live Camera OCR:** Implement functionality to enable real-time OCR.
 
